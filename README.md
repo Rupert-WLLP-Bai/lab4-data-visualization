@@ -106,4 +106,4 @@ python demo-by-region.py
 各个依赖的作用请参见各个依赖库的文档说明。
 
 ## 运行截图
-[Dash.pdf](.img/Dash.pdf)
+[Dash.pdf](./img/Dash.pdf)
