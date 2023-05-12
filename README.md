@@ -32,6 +32,7 @@
 
 1. 安装 Python 3.x。
 2. 在项目根目录下，输入以下命令以创建一个新的虚拟环境：
+3. 安装依赖
 
 ```
 python -m venv myenv
@@ -52,6 +53,13 @@ source myenv/bin/activate
 ```
 .\myenv\Scripts\activate
 ```
+
+2. 安装依赖
+
+```
+pip install -r requirements.txt
+```
+
 
 ### 运行项目
 
