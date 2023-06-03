@@ -66,6 +66,12 @@ pie_layout = html.Div([
         )], className='col-6'),
 ], className='row')
 
+new_scatter_layout = html.Div([
+    dcc.Graph(id='new-scatter-plot', className='col-1',
+              style={'width': '100%', 'display': 'inline-block'}),
+], className='row')
+
+
 # Define the layout
 app.layout = html.Div(children=[
     html.H1(children='College Salaries by Region'),
@@ -105,6 +111,9 @@ app.layout = html.Div(children=[
         # 饼图
         dcc.Graph(id='pie-plot-graph', className='col-1',
                   style={'width': '100%', 'display': 'inline-block'}),
+    ], className='row'),
+    html.Div([
+        new_scatter_layout,
     ], className='row'),
 ])
 
@@ -292,10 +301,12 @@ def update_pie_plot(selected_region, pie_plot_column):
     # 去除filter_data中的美元符号和逗号, 并转换为float类型
     # 先拷贝一份数据, 避免修改原始数据
     filtered_data = filtered_data.copy()
-    filtered_data[pie_plot_column] = filtered_data[pie_plot_column].str.replace('$', '', regex=False)
-    filtered_data[pie_plot_column] = filtered_data[pie_plot_column].str.replace(',', '', regex=False)
-    filtered_data[pie_plot_column] = filtered_data[pie_plot_column].astype(float)
-
+    filtered_data[pie_plot_column] = filtered_data[pie_plot_column].str.replace(
+        '$', '', regex=False)
+    filtered_data[pie_plot_column] = filtered_data[pie_plot_column].str.replace(
+        ',', '', regex=False)
+    filtered_data[pie_plot_column] = filtered_data[pie_plot_column].astype(
+        float)
 
     return {
         'data': [
@@ -315,6 +326,53 @@ def update_pie_plot(selected_region, pie_plot_column):
         }
     }
 
+
+import plotly.colors
+
+@app.callback(Output('new-scatter-plot', 'figure'), [Input('region-dropdown', 'value')])
+def update_new_scatter_plot(selected_region):
+    filtered_data = data[data['Region'] == selected_region].copy()
+
+    # 处理数据，去除符号并转换为float类型
+    for column in scatter_columns:
+        filtered_data[column] = filtered_data[column].str.replace('$', '', regex=False)
+        filtered_data[column] = filtered_data[column].str.replace(',', '', regex=False)
+        filtered_data[column] = filtered_data[column].astype(float)
+
+    # 计算纵坐标对应的点大小
+    min_salary = filtered_data[scatter_columns].min().min()
+    max_salary = filtered_data[scatter_columns].max().max()
+
+    scatter_data = []
+    color_scale = plotly.colors.sequential.Viridis  # 使用Viridis渐变色
+    for i, column in enumerate(scatter_columns):
+        normalized_sizes = 30 + 30 * ((filtered_data[column] - min_salary) / (max_salary - min_salary))
+        scatter_data.append({
+            'x': filtered_data['School Name'],
+            'y': [column] * len(filtered_data),
+            'type': 'scatter',
+            'mode': 'markers',
+            'name': column,
+            'marker': {
+                'size': normalized_sizes,
+                'color': filtered_data[column],  # 使用属性列的值作为颜色
+                'colorscale': color_scale,  # 使用Viridis渐变色
+            }
+        })
+
+    return {
+        'data': scatter_data,
+        'layout': {
+            'title': f'Scatter Plot of Salaries for {selected_region} Colleges',
+            'xaxis': {'title': 'School Name'},
+            'yaxis': {'title': 'Salary Type', 'tickmode': 'array', 'tickvals': scatter_columns, 'ticktext': scatter_columns},
+            'height': 600,
+            'legend': {
+                'x': 1.02,  # 调整图例的水平位置
+                'y': 1  # 调整图例的垂直位置
+            }
+        }
+    }
 
 # Run the app
 if __name__ == '__main__':
