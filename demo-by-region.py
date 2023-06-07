@@ -71,6 +71,11 @@ new_scatter_layout = html.Div([
               style={'width': '100%', 'display': 'inline-block'}),
 ], className='row')
 
+# TODO: Test scatter plot with [x1,y1] and [x1,y2]
+scatter_line_layout = html.Div([
+    dcc.Graph(id='scatter-line-plot', className='col-1',
+              style={'width': '100%', 'display': 'inline-block'}),
+], className='row')
 
 # Define the layout
 app.layout = html.Div(children=[
@@ -114,6 +119,9 @@ app.layout = html.Div(children=[
     ], className='row'),
     html.Div([
         new_scatter_layout,
+    ], className='row'),
+    html.Div([
+        scatter_line_layout,
     ], className='row'),
 ])
 
@@ -332,7 +340,7 @@ import plotly.colors
 @app.callback(Output('new-scatter-plot', 'figure'), [Input('region-dropdown', 'value')])
 def update_new_scatter_plot(selected_region):
     filtered_data = data[data['Region'] == selected_region].copy()
-
+    
     # 处理数据，去除符号并转换为float类型
     for column in scatter_columns:
         filtered_data[column] = filtered_data[column].str.replace('$', '', regex=False)
@@ -373,6 +381,39 @@ def update_new_scatter_plot(selected_region):
             }
         }
     }
+
+# TODO: Define the callback to update the scatter plot based on the selected x-axis and y-axis
+@app.callback(Output('scatter-line-plot', 'figure'), [Input('region-dropdown', 'value')])
+def update_scatter_plot(selected_region):
+    filtered_data = data[data['Region'] == selected_region].copy()
+    for column in scatter_columns:
+        filtered_data[column] = filtered_data[column].str.replace('$', '', regex=False)
+        filtered_data[column] = filtered_data[column].str.replace(',', '', regex=False)
+        filtered_data[column] = filtered_data[column].astype(float)
+    return {
+        'data': [
+            {
+                'x': filtered_data['Starting Median Salary'],
+                'y': filtered_data['Mid-Career Median Salary'],
+                'mode': 'markers',
+                'name': 'Test Scatter',
+                'type': 'scatter',
+            },
+            {
+                'x': filtered_data['Starting Median Salary'],
+                'y': 2 * filtered_data['Starting Median Salary'], 
+                'mode': 'lines',
+                'name': 'Test Line y = 2x',
+                'type': 'scatter'
+            }
+        ],
+        'layout': {
+            'title': f'Scatter Plot of Mid-Career Median Salary vs. Starting Median Salary for {selected_region} Colleges',
+            'xaxis': {'title': 'Starting Median Salary'},
+            'yaxis': {'title': 'Mid-Career Median Salary'}
+        }
+    }
+
 
 # Run the app
 if __name__ == '__main__':
