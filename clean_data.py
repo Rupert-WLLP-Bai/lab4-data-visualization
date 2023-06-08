@@ -13,10 +13,8 @@ for column in scatter_columns:
     data[column] = data[column].str.replace(',', '', regex=False)
     data[column] = data[column].astype(float)
 
-# 创建新的DataFrame，仅包含所需的列
-new_data = data[['School Name', 'Starting Median Salary', 'Mid-Career Median Salar`y',
-                 'Mid-Career 10th Percentile Salary', 'Mid-Career 25th Percentile Salary',
-                 'Mid-Career 75th Percentile Salary', 'Mid-Career 90th Percentile Salary']].copy()
+# 创建新的DataFrame
+new_data = data.copy()
 
 # 保存新的DataFrame到CSV文件
 new_data.to_csv('cleaned_data.csv', index=False)
