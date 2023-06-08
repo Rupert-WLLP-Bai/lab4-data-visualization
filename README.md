@@ -88,6 +88,7 @@ python demo-by-region.py
 - `dash-html-components==2.0.0`
 - `dash-table==5.0.0`
 - `Flask==2.3.2`
+- `greenlet==2.0.2`
 - `importlib-metadata==6.6.0`
 - `itsdangerous==2.1.2`
 - `Jinja2==3.1.2`
@@ -96,10 +97,13 @@ python demo-by-region.py
 - `packaging==23.1`
 - `pandas==2.0.1`
 - `plotly==5.14.1`
+- `psycopg2==2.9.6`
 - `python-dateutil==2.8.2`
 - `pytz==2023.3`
 - `six==1.16.0`
+- `SQLAlchemy==2.0.13`
 - `tenacity==8.2.2`
+- `typing_extensions==4.5.0`
 - `tzdata==2023.3`
 - `Werkzeug==2.3.4`
 - `zipp==3.15.0`
