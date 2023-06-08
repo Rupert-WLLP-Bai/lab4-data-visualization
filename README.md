@@ -13,6 +13,7 @@
     - [运行项目](#运行项目)
   - [项目依赖](#项目依赖)
   - [运行截图](#运行截图)
+  - [CHANGELOG](#changelog)
 
 
 ## 项目简介
@@ -107,3 +108,9 @@ python demo-by-region.py
 
 ## 运行截图
 [Dash.pdf](./img/Dash.pdf)
+
+## CHANGELOG
+1. 加入了[clean_data.py](./clean_data.py)用于清洗数据
+2. 加入了[connect_to_db.py](./connect_to_db.py)用于连接数据库并且将数据存入数据库
+3. 加入了[cleaned_data.csv](./cleaned_data.csv)用于存储清洗后的数据
+4. 加入了[test_db.py](./test_db.py)用于测试数据库连接
